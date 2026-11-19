@@ -49,7 +49,14 @@ export async function registerAction(_prevState, formData) {
   let user;
   try {
     const { phone, ...rest } = fields;
-    const res = await authService.register({ ...rest, ...(phone && { phone }), password, role });
+    // The form shows a fixed +91 prefix, so a bare local number gets it added here.
+    const fullPhone = phone && !phone.startsWith("+") ? `+91${phone.replace(/\D/g, "")}` : phone;
+    const res = await authService.register({
+      ...rest,
+      ...(fullPhone && { phone: fullPhone }),
+      password,
+      role,
+    });
     await setSessionToken(res.token);
     user = res.user;
   } catch (err) {

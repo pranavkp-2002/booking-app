@@ -1,38 +1,26 @@
-// Presentational pieces shared by the login and register forms.
+// Slotly-styled pieces shared by the login and register forms.
 // No hooks, so they render in either Server or Client Components.
 
-export function Field({ label, ...props }) {
-  return (
-    <label className="flex flex-col gap-1 text-sm">
-      {label}
-      <input
-        className="w-full rounded border border-black/15 bg-transparent px-3 py-2 dark:border-white/20"
-        {...props}
-      />
-    </label>
-  );
-}
+const focusRing =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7C6B]";
 
-export function RadioGroup({ label, name, options, defaultValue }) {
+export const inputClass = `h-12 w-full rounded-xl border border-[#D5D9E0] bg-white px-3.5 text-[15px] text-[#12151A] placeholder:text-[#9AA0AC] ${focusRing}`;
+
+export const linkClass = "font-semibold text-[#0E7C6B] hover:text-[#0A5E51]";
+
+export function Field({ label, children }) {
   return (
-    <fieldset className="flex flex-col gap-1 text-sm">
-      <legend className="mb-1">{label}</legend>
-      <div className="flex gap-4">
-        {options.map((o) => (
-          <label key={o.value} className="flex items-center gap-2">
-            <input type="radio" name={name} value={o.value} defaultChecked={o.value === defaultValue} />
-            {o.label}
-          </label>
-        ))}
-      </div>
-    </fieldset>
+    <label className="flex flex-col gap-1.5 text-sm">
+      <span className="font-semibold">{label}</span>
+      {children}
+    </label>
   );
 }
 
 export function FormError({ message }) {
   if (!message) return null;
   return (
-    <p role="alert" className="rounded bg-red-500/10 px-3 py-2 text-sm text-red-600">
+    <p role="alert" className="text-[13px] text-[#B42318]">
       {message}
     </p>
   );
@@ -43,20 +31,9 @@ export function SubmitButton({ pending, children, pendingText }) {
     <button
       type="submit"
       disabled={pending}
-      className="rounded bg-foreground px-4 py-2 font-medium text-background disabled:opacity-50"
+      className={`flex min-h-[52px] w-full cursor-pointer items-center justify-center rounded-xl bg-[#0E7C6B] text-[15px] font-semibold text-white hover:bg-[#0A5E51] disabled:cursor-progress disabled:opacity-60 ${focusRing}`}
     >
       {pending ? pendingText : children}
     </button>
-  );
-}
-
-export function AuthLayout({ title, children }) {
-  return (
-    <main className="flex flex-1 items-center justify-center p-6">
-      <div className="flex w-full max-w-sm flex-col gap-4">
-        <h1 className="text-2xl font-semibold">{title}</h1>
-        {children}
-      </div>
-    </main>
   );
 }
