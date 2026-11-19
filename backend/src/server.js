@@ -4,7 +4,12 @@ import { connectDB } from "./config/db.js";
 
 const PORT = process.env.PORT || 4040;
 
-// await connectDB();
+if (!process.env.JWT_SECRET) {
+  console.error("JWT_SECRET is not set. Add it to backend/.env (see .env.example).");
+  process.exit(1);
+}
+
+await connectDB();
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`),
 );
