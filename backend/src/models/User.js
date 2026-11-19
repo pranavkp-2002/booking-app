@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
       enum: { values: ROLES, message: "Invalid role" },
       default: "user",
     },
+    whatsappReminders: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true },
 );

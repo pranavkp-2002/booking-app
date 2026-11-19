@@ -67,7 +67,7 @@ export async function apiFetch(path, { body, auth = true, headers, ...init } = {
 }
 
 // Convenience helpers.
-export const api = {
+export const  api = {
   get: (path, opts) => apiFetch(path, { ...opts, method: "GET" }),
   post: (path, body, opts) => apiFetch(path, { ...opts, method: "POST", body }),
   put: (path, body, opts) => apiFetch(path, { ...opts, method: "PUT", body }),

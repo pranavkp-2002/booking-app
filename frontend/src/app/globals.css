@@ -12,6 +12,24 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Slotly design tokens: use as bg-brand, text-ink, border-line, etc */
+@theme {
+  --color-brand: #0e7c6b;
+  --color-brand-hover: #0a5e51;
+  --color-brand-soft: #e3f3ef;
+  --color-ink: #12151a;
+  --color-ink-2: #3a404c;
+  --color-muted: #5a6170;
+  --color-faint: #9aa0ac;
+  --color-line: #e3e6eb;
+  --color-line-strong: #d5d9e0;
+  --color-surface: #f0f2f5;
+  --color-surface-2: #f5f6f8;
+  --color-danger: #b42318;
+  --color-success: #067647;
+  --color-success-soft: #e7f6ee;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

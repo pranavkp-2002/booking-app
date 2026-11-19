@@ -9,6 +9,7 @@ export const authService = {
   register: (fields) => api.post("/auth/register", fields, { auth: false }),
   logout: () => api.post("/auth/logout"),
   me: () => api.get("/auth/me"),
+  updateMe: (fields) => api.patch("/auth/me", fields),
 };
 
 /**

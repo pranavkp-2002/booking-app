@@ -50,3 +50,29 @@ export const logout = (req, res) => {
 export const me = (req, res) => {
   res.json({ user: req.user });
 };
+
+// Fields a user may change on their own profile. Role and password are excluded on purpose.
+const PROFILE_FIELDS = ["name", "email", "phone", "whatsappReminders"];
+
+export const updateMe = async (req, res) => {
+  const body = req.body ?? {};
+  for (const key of PROFILE_FIELDS) {
+    if (body[key] === undefined) continue;
+    // An empty phone clears it instead of failing the format check.
+    if (key === "phone" && String(body.phone).trim() === "") {
+      req.user.phone = undefined;
+    } else {
+      req.user[key] = body[key];
+    }
+  }
+
+  if (req.user.isModified("email")) {
+    const taken = await User.exists({ email: req.user.email, _id: { $ne: req.user._id } });
+    if (taken) {
+      return res.status(409).json({ message: "Email is already registered" });
+    }
+  }
+
+  await req.user.save();
+  res.json({ user: req.user });
+};
