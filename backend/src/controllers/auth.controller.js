@@ -1,8 +1,8 @@
-import User from "../models/User.js";
+import User, { SELF_REGISTER_ROLES } from "../models/User.js";
 import { COOKIE_NAME, cookieOptions, sendAuthResponse } from "../utils/token.js";
 
 export const register = async (req, res) => {
-  const { name, email, phone, password } = req.body ?? {};
+  const { name, email, phone, password, role = "user" } = req.body ?? {};
 
   if (!name || !email || !password) {
     return res
@@ -10,14 +10,17 @@ export const register = async (req, res) => {
       .json({ message: "Name, email and password are required" });
   }
 
+  // Only allow-listed roles: anyone could otherwise register as a super admin.
+  if (!SELF_REGISTER_ROLES.includes(role)) {
+    return res.status(400).json({ message: "Invalid account type" });
+  }
+
   const exists = await User.exists({ email: String(email).toLowerCase() });
   if (exists) {
     return res.status(409).json({ message: "Email is already registered" });
   }
 
-  // `role` is deliberately not taken from the request body: anyone could
-  // otherwise register themselves as an admin.
-  const user = await User.create({ name, email, phone, password });
+  const user = await User.create({ name, email, phone, password, role });
   sendAuthResponse(res, user, 201);
 };
 

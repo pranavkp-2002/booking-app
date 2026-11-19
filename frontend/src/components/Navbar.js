@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { logoutAction } from "@/actions/auth.actions";
 import { getCurrentUser } from "@/services/auth.service";
+import { ROLES } from "@/utils/roles";
 
 // Static shell (prerendered) + user section streamed in per request.
 export default function Navbar() {
@@ -33,8 +34,9 @@ async function NavUser() {
 
   return (
     <>
-      <Link href="/my-bookings">My bookings</Link>
-      {user.role === "admin" && <Link href="/admin">Admin</Link>}
+      {user.role === ROLES.USER && <Link href="/my-bookings">My bookings</Link>}
+      {user.role === ROLES.SHOP && <Link href="/shop">Shop dashboard</Link>}
+      {user.role === ROLES.SUPER_ADMIN && <Link href="/admin">Admin</Link>}
       <span className="text-zinc-500">{user.name}</span>
       <form action={logoutAction}>
         <button type="submit" className="underline">

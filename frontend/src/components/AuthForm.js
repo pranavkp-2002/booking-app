@@ -13,6 +13,22 @@ export function Field({ label, ...props }) {
   );
 }
 
+export function RadioGroup({ label, name, options, defaultValue }) {
+  return (
+    <fieldset className="flex flex-col gap-1 text-sm">
+      <legend className="mb-1">{label}</legend>
+      <div className="flex gap-4">
+        {options.map((o) => (
+          <label key={o.value} className="flex items-center gap-2">
+            <input type="radio" name={name} value={o.value} defaultChecked={o.value === defaultValue} />
+            {o.label}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
 export function FormError({ message }) {
   if (!message) return null;
   return (

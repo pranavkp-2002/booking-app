@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { authService } from "@/services/auth.service";
 import { ApiError } from "@/services/http";
 import { clearSessionToken, setSessionToken } from "@/services/session";
+import { homeFor, ROLES } from "@/utils/roles";
 import { safeNext } from "@/utils/safe-next";
 
 const field = (formData, key) => String(formData.get(key) ?? "").trim();
@@ -29,7 +30,7 @@ export async function loginAction(_prevState, formData) {
   }
 
   // redirect() throws, so it must stay outside the try/catch.
-  redirect(safeNext(formData.get("next"), user.role === "admin" ? "/admin" : "/my-bookings"));
+  redirect(safeNext(formData.get("next"), homeFor(user.role)));
 }
 
 export async function registerAction(_prevState, formData) {
@@ -39,20 +40,23 @@ export async function registerAction(_prevState, formData) {
     phone: field(formData, "phone"),
   };
   const password = String(formData.get("password") ?? "");
+  const role = field(formData, "role") || ROLES.USER;
 
   if (!fields.name || !fields.email || !password) {
     return { error: "Name, email and password are required", fields };
   }
 
+  let user;
   try {
     const { phone, ...rest } = fields;
-    const res = await authService.register({ ...rest, ...(phone && { phone }), password });
+    const res = await authService.register({ ...rest, ...(phone && { phone }), password, role });
     await setSessionToken(res.token);
+    user = res.user;
   } catch (err) {
-    return { error: errorMessage(err), fields };
+    return { error: errorMessage(err), fields: { ...fields, role } };
   }
 
-  redirect(safeNext(formData.get("next"), "/my-bookings"));
+  redirect(safeNext(formData.get("next"), homeFor(user.role)));
 }
 
 export async function logoutAction() {

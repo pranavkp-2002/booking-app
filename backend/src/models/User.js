@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+export const ROLES = ["user", "shop", "super_admin"];
+
+// Roles a person may pick when signing up. super_admin is only granted via
+// `npm run set-role`, never through the API.
+export const SELF_REGISTER_ROLES = ["user", "shop"];
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -30,7 +36,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: { values: ROLES, message: "Invalid role" },
       default: "user",
     },
   },

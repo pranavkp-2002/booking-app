@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { requireRole } from "@/services/auth.service";
 import { userService } from "@/services/user.service";
+import { ROLE_LABELS, ROLES } from "@/utils/roles";
 
 export const metadata = { title: "Admin" };
 
@@ -17,7 +18,7 @@ export default function AdminPage() {
 }
 
 async function UsersTable() {
-  await requireRole(["admin"], "/admin");
+  await requireRole([ROLES.SUPER_ADMIN], "/admin");
   const users = await userService.list();
 
   return (
@@ -36,7 +37,7 @@ async function UsersTable() {
             <td className="py-2">{u.name}</td>
             <td>{u.email}</td>
             <td>{u.phone || "—"}</td>
-            <td>{u.role}</td>
+            <td>{ROLE_LABELS[u.role] ?? u.role}</td>
           </tr>
         ))}
       </tbody>

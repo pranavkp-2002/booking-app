@@ -2,7 +2,13 @@
 
 import { useActionState } from "react";
 import { registerAction } from "@/actions/auth.actions";
-import { Field, FormError, SubmitButton } from "@/components/AuthForm";
+import { Field, FormError, RadioGroup, SubmitButton } from "@/components/AuthForm";
+import { ROLES } from "@/utils/roles";
+
+const ACCOUNT_TYPES = [
+  { value: ROLES.USER, label: "I want to book" },
+  { value: ROLES.SHOP, label: "I run a shop" },
+];
 
 export default function RegisterForm({ next }) {
   const [state, formAction, pending] = useActionState(registerAction, null);
@@ -12,6 +18,12 @@ export default function RegisterForm({ next }) {
     <form action={formAction} className="flex flex-col gap-4">
       <FormError message={state?.error} />
       {next && <input type="hidden" name="next" value={next} />}
+      <RadioGroup
+        label="Account type"
+        name="role"
+        options={ACCOUNT_TYPES}
+        defaultValue={fields.role ?? ROLES.USER}
+      />
       <Field label="Name" name="name" autoComplete="name" required defaultValue={fields.name} />
       <Field
         label="Email"
